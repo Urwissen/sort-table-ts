@@ -21,7 +21,6 @@ function App() {
     setSort(prev => !prev)
     const clickedTitle: string = e.target.textContent.toLowerCase()
     if (clickedTitle in userList[0]) {
-      console.log("title " + clickedTitle +" is in userlist")
       if (clickedTitle && sort === false) {
         console.log(clickedTitle)
         setUserList(prevList => {
@@ -51,12 +50,9 @@ function App() {
           })  
         })
       }
-      console.log("after",userList)
     } else {
       alert("unable to sort by "+ clickedTitle)
     }
-    console.log("before", userList)
-    
 }
 
   return (

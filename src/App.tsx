@@ -5,7 +5,9 @@ import Table from './components/Table';
 
 function App() {
   const [userList, setUserList] = React.useState([])
+  const [searchedList, setSearchedList] = React.useState([])
   const [sort, setSort] = React.useState(false)
+  const [inputValue, setInputValue] = React.useState("")
 
   const url: string = "https://jsonplaceholder.typicode.com/users"
 
@@ -15,14 +17,13 @@ function App() {
     .then((data) => setUserList(data))
     .catch((error) => console.log(error))
   }, [])
-  console.log(typeof userList)
 
   function handleSort(e: any){
     setSort(prev => !prev)
     const clickedTitle: string = e.target.textContent.toLowerCase()
     if (clickedTitle in userList[0]) {
+
       if (clickedTitle && sort === false) {
-        console.log(clickedTitle)
         setUserList(prevList => {
           return prevList.sort((a: any,b: any) => {
             if (a[clickedTitle] > b[clickedTitle]) {
@@ -35,9 +36,8 @@ function App() {
           })  
         })
       }
+
       if (clickedTitle && sort) {
-        console.log(clickedTitle)
-        console.log("before", userList)
         setUserList(prevList => {
           return prevList.sort((a: any,b: any) => {
             if (a[clickedTitle] < b[clickedTitle]) {
@@ -53,7 +53,25 @@ function App() {
     } else {
       alert("unable to sort by "+ clickedTitle)
     }
-}
+  }
+
+  function handleChange(e: any) {
+    const inpt = e.target.value.toLowerCase()
+    setInputValue(inpt)
+    setSearchedList(userList.filter(user => {
+      return Object.values(user).includes(inpt)
+      /* for(let value in user) {
+        
+        if (user[value] === e.target.value) {
+          console.log("MATCH: ", user[value])
+          return value
+        }
+      } */
+    }))
+  }
+
+
+  console.log(inputValue)
 
   return (
     <div className="App">
@@ -72,6 +90,9 @@ function App() {
         </a>
       </header>
       <main>
+        <input type="text" value={inputValue} name={inputValue} onChange={handleChange}/>
+        <Table users={searchedList} handler={handleSort}/>
+        <br/>
         <Table users={userList} handler={handleSort}/>
       </main>
     </div>
